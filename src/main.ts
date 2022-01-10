@@ -6,4 +6,6 @@ app.innerHTML = `
   <h1>Hello Vite!</h1>
   <a href="https://vitejs.dev/guide/features.html" target="_blank">Documentation</a>
 `
-const simulation = document.getElementById("simulation")
+// var canvas = document.getElementById("simulation")
+// var ctx = canvas.getContext("2d");
+// ctx.fillStyle = "#1f1e33";
