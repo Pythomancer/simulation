@@ -1,6 +1,6 @@
 import './style.css'
 import * as THREE from 'three'
-import * as math from 'mathjs'
+// import * as math from 'mathjs'
 import { cos, sin, tan } from 'mathjs'
 
 const scene = new THREE.Scene()
@@ -50,14 +50,14 @@ function animate() {
 //   return x;
 // }
 
-function eq (equation:string, xin:number, yin:number, zin:number){
-  let scope = {
-    x: xin,
-    y: yin,
-    z: zin
-  }
-  return math.evaluate(equation, scope);
-}
+// function eq (equation:string, xin:number, yin:number, zin:number){
+//   let scope = {
+//     x: xin,
+//     y: yin,
+//     z: zin
+//   }
+//   return math.evaluate(equation, scope);
+// }
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
