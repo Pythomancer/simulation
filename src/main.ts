@@ -1,7 +1,7 @@
 import "./style.css";
 import * as THREE from "three";
-import * as math from "mathjs";
-import { cos, sin, tan } from "mathjs";
+// import * as math from "mathjs";
+import { cos, sin } from "mathjs";
 
 interface DomainPoint {
   value: number;
@@ -93,15 +93,15 @@ function animate() {
 //   return x;
 // }
 
-function eq(equation: string, xin: number, yin: number, zin: number) {
-  let scope = {
-    x: xin,
-    y: yin,
-    z: zin,
-  };
-  //return math.evaluate(equation, scope);
-  return sin(xin) + sin(yin);
-}
+// function eq(equation: string, xin: number, yin: number, zin: number) {
+//   let scope = {
+//     x: xin,
+//     y: yin,
+//     z: zin,
+//   };
+//   //return math.evaluate(equation, scope);
+//   return sin(xin) + sin(yin);
+// }
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
