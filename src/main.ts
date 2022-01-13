@@ -1,25 +1,27 @@
 import './style.css'
-import * as THREE from 'three';
-import * as math from 'mathjs';
+import * as THREE from 'three'
+import * as math from 'mathjs'
+import { cos, sin, tan } from 'mathjs'
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+const scene = new THREE.Scene()
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 )
 
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshPhongMaterial( { color: 0x1f1e33 } );
-const cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
-let time = 0.0;
-camera.position.z = 2;
-const light = new THREE.DirectionalLight(0xFFFFFF, 1);
+const geometry = new THREE.BoxGeometry(1, 1, 1)
+const material = new THREE.MeshPhongMaterial( { color: 0x1f1e33 } )
+const cube = new THREE.Mesh( geometry, material )
+scene.add( cube )
+let time = 0.0
+camera.position.z = 2
+const light = new THREE.DirectionalLight(0xFFFFFF, 1)
 light.position.set(-1, 2, 4)
-scene.add(light);
+scene.add(light)
+camera.lookAt(0,0,0)
 
 function animate() {
-	requestAnimationFrame( animate );
-	renderer.render( scene, camera );
-  cube.rotation.x = Math.sin(time);
-  cube.rotation.y = Math.cos(time);
+  camera.position.set(2*cos(time), 2*sin(time), 2*tan(time))
+  camera.lookAt(0,0,0)
+	requestAnimationFrame( animate )
+	renderer.render( scene, camera )
   time+=0.01
 }
 
