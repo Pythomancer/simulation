@@ -4,7 +4,7 @@ import * as THREE from "three";
 import { sin } from "mathjs";
 import { Vector3 } from "three";
 
-export let ptCube = new THREE.BoxGeometry(0.005, 0.005, 0.005);
+export let ptCube = new THREE.BoxGeometry(0.002, 0.002, 0.002);
 export const ptMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
 
 export class DomainPt {
