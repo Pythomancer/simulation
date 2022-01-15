@@ -3,11 +3,11 @@ import * as THREE from "three";
 import * as math from "mathjs";
 import { cos, sin } from "mathjs";
 // import { Vector3 } from "three";
-import { ptMat } from "./domain";
+import { DomainPt, ptMat } from "./domain";
 
-const xsize = 50;
-const ysize = 50;
-const zsize = 50;
+const xsize = 20;
+const ysize = 20;
+const zsize = 20;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -23,43 +23,27 @@ camera.position.z = 2;
 // light.position.set(0, 0, 0);
 // scene.add(light);
 camera.lookAt(0, 0, 0);
-const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
-let ptCube = new THREE.BoxGeometry(0.005, 0.005, 0.005);
-let meesh = new THREE.InstancedMesh(ptCube, material, xsize * ysize * zsize);
-let ms = window.performance.now();
+
+let matrix: DomainPt[][][] = [];
+
 for (let i = 0; i < xsize; i++) {
+  matrix[i] = [];
   for (let j = 0; j < ysize; j++) {
+    matrix[i].push([]);
     for (let k = 0; k < zsize; k++) {
-      meesh.setColorAt(
-        i * ysize * zsize + j * zsize + k,
-        new THREE.Color(i / xsize, j / ysize, k / zsize)
+      matrix[i][j].push(new DomainPt());
+      matrix[i][j][k].geometry.position.set(
+        i / xsize - 0.5,
+        j / ysize - 0.5,
+        k / zsize - 0.5
       );
-      console.log(i, j, k, i / xsize, j / ysize, k / zsize);
-      meesh.setMatrixAt(
-        i * ysize * zsize + j * zsize + k,
-        new THREE.Matrix4().set(
-          1,
-          0,
-          0,
-          i / xsize - 0.5,
-          0,
-          1,
-          0,
-          j / ysize - 0.5,
-          0,
-          0,
-          1,
-          k / zsize - 0.5,
-          0,
-          0,
-          0,
-          1
-        )
-      );
+      matrix[i][j][k].resize(sin(matrix[i][j][k].geometry.position.x * 4) / 80);
+      scene.add(matrix[i][j][k].geometry);
     }
   }
 }
-scene.add(meesh);
+let ms = window.performance.now();
+
 function animate() {
   document.getElementById("fps")!.innerHTML =
     "" + math.round(1000 / (window.performance.now() - ms));
