@@ -1,12 +1,9 @@
 import "./style.css";
 import * as THREE from "three";
-// import * as math from "mathjs";
+import * as math from "mathjs";
 import { cos, sin } from "mathjs";
-
-interface DomainPoint {
-  value: number;
-  geometry: THREE.Mesh;
-}
+import { Vector3 } from "three";
+import { DomainPt, ptCube, ptMat } from "./domain";
 
 const xsize = 5;
 const ysize = 5;
@@ -20,10 +17,8 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
+const mesh = new THREE.Mesh(ptCube, ptMat);
+scene.add(mesh);
 let time = 0.0;
 camera.position.z = 2;
 // const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -31,19 +26,14 @@ camera.position.z = 2;
 // scene.add(light);
 camera.lookAt(0, 0, 0);
 
-let ptCube = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-
-let matrix: DomainPoint[][][] = [];
+let matrix: DomainPt[][][] = [];
 
 for (let i = 0; i < xsize; i++) {
   matrix[i] = [];
   for (let j = 0; j < ysize; j++) {
     matrix[i].push([]);
     for (let k = 0; k < zsize; k++) {
-      matrix[i][j].push({
-        value: 0.2,
-        geometry: new THREE.Mesh(ptCube, material),
-      });
+      matrix[i][j].push(new DomainPt());
       matrix[i][j][k].geometry.position.set(i, j, k);
       scene.add(matrix[i][j][k].geometry);
     }
@@ -51,21 +41,21 @@ for (let i = 0; i < xsize; i++) {
 }
 
 function animate() {
+  time += 0.005;
+  ptMat.color = new THREE.Color(
+    sin(time) * sin(time),
+    sin(time + 1) * sin(time + 1),
+    sin(time + 2) * sin(time + 2)
+  );
   camera.position.set(
     xsize / 2.0 + 3 * cos(time),
     ysize / 2.0,
     zsize / 2.0 + 3 * sin(time)
   );
-  // camera.position.set(50 * cos(time), 50 * sin(time), 2 * tan(time));
+
   camera.lookAt(xsize / 2, ysize / 2, zsize / 2);
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
-  time += 0.005;
-  material.color = new THREE.Color(
-    sin(time) * sin(time),
-    sin(time + 1) * sin(time + 1),
-    sin(time + 2) * sin(time + 2)
-  );
 }
 
 // function eq(equation:String, x:number, y:number, z:number) {
@@ -91,16 +81,6 @@ function animate() {
 //   }
 //   depth.indexOf(depth.max)
 //   return x;
-// }
-
-// function eq(equation: string, xin: number, yin: number, zin: number) {
-//   let scope = {
-//     x: xin,
-//     y: yin,
-//     z: zin,
-//   };
-//   //return math.evaluate(equation, scope);
-//   return sin(xin) + sin(yin);
 // }
 
 const renderer = new THREE.WebGLRenderer();
