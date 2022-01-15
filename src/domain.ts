@@ -1,10 +1,10 @@
 import "./style.css";
 import * as THREE from "three";
-import * as math from "mathjs";
-import { cos, sin } from "mathjs";
+// import * as math from "mathjs";
+import { sin } from "mathjs";
 import { Vector3 } from "three";
 
-export let ptCube = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+export let ptCube = new THREE.BoxGeometry(0.02, 0.02, 0.02);
 export const ptMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
 
 export class DomainPt {
@@ -37,5 +37,10 @@ export class DomainPt {
 
   positiont(posx: number, posy: number, posz: number): void {
     this.geometry.position.set(posx, posy, posz);
+  }
+
+  resize(value: number) {
+    this.shape = new THREE.BoxGeometry(value, value, value);
+    this.geometry = new THREE.Mesh(this.shape, this.material);
   }
 }
