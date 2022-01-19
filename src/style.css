@@ -15,7 +15,10 @@ body {
 p {
   color: aquamarine;
 }
-
+label {
+  color: aquamarine;
+  left: 0;
+}
 canvas {
   position: fixed;
   left: 0;

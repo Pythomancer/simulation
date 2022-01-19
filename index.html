@@ -9,16 +9,22 @@
   </head>
   <body>
     <div>
-      <form>
-        <label for="equation"> Equation: </label>
-        <input type="text" id="equation" name="equation">
-      </form>
-
+      <label for="equation"> Scalar Equation: </label>
+      <input type="text" id="equation" name="equation">
+      <br>
+      <label for="scalar"> Scalar? </label>
+      <input type="checkbox" id="scalar" name="scalar">
+      <br>
+      <label for="mequation"> X-Component Equation: </label>
+      <input type="text" id="mequation" name="mequation">
+      <br>
+      <label for="nequation"> Y-Component Equation: </label>
+      <input type="text" id="nequation" name="nequation">
+      <br>
+      <label for="pequation"> Z-Component Equation: </label>
+      <input type="text" id="pequation" name="pequation">
       <p id="fps">
         0
-      </p>
-      <p id="eq">
-        a
       </p>
     </div>
     <script type="module" src="/src/main.ts"></script>
