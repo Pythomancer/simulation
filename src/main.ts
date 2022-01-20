@@ -16,8 +16,6 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 
-let time = 0.0;
-
 const material = new THREE.MeshBasicMaterial({
   color: 0xffffff,
 });
