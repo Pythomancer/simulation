@@ -1,11 +1,12 @@
 import "./style.css";
 import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as math from "mathjs";
 import { cos, sin } from "mathjs";
 
-const xsize = 5;
-const ysize = 5;
-const zsize = 5;
+const xsize = 20;
+const ysize = 20;
+const zsize = 20;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -197,7 +198,7 @@ let meq: string = meqi.value;
 let neq: string = neqi.value;
 let peq: string = peqi.value;
 let scalar: boolean = false;
-let scale: number = parseInt(scalei.value) / 4;
+let scale: number = parseInt(scalei.value) / xsize;
 
 eqi.addEventListener("focusout", () => {
   eq = eqi.value;
@@ -225,15 +226,16 @@ scalei.addEventListener("change", () => {
 });
 
 inputHandler();
-
+camera.position.set(1, 1, 1);
 function animate() {
   document.getElementById("fps")!.innerHTML =
     "" + math.round(1000 / (window.performance.now() - ms));
   ms = window.performance.now();
 
   time += 0.005;
-  camera.position.set(1.0 * cos(time), 0, 1.0 * sin(time));
-  camera.lookAt(0, 0, 0);
+  //camera.position.set(1.0 * cos(time), 0, 1.0 * sin(time));
+  //camera.lookAt(0, 0, 0);
+  controls.update();
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
@@ -241,7 +243,11 @@ function animate() {
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 window.addEventListener("resize", () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.autoRotate = true;
 document.body.appendChild(renderer.domElement);
 animate();
