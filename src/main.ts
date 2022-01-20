@@ -232,9 +232,6 @@ function animate() {
     "" + math.round(1000 / (window.performance.now() - ms));
   ms = window.performance.now();
 
-  time += 0.005;
-  //camera.position.set(1.0 * cos(time), 0, 1.0 * sin(time));
-  //camera.lookAt(0, 0, 0);
   controls.update();
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
