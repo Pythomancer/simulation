@@ -18,6 +18,14 @@ p {
 label {
   color: aquamarine;
   left: 0;
+  font-family: Arial;
+}
+input {
+  color: #1f1e33
+  font-family: Arial;
+  padding: 5px 10px;
+  margin: 8px 0;
+  box-sizing: border-box;
 }
 canvas {
   position: fixed;

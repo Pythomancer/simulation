@@ -3,9 +3,9 @@ import * as THREE from "three";
 import * as math from "mathjs";
 import { cos, sin } from "mathjs";
 
-const xsize = 50;
-const ysize = 50;
-const zsize = 50;
+const xsize = 5;
+const ysize = 5;
+const zsize = 5;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -34,17 +34,17 @@ for (let i = 0; i < xsize; i++) {
       meesh.setMatrixAt(
         i * ysize * zsize + j * zsize + k,
         new THREE.Matrix4().set(
-          sin((i / xsize) * 5),
+          1,
           0,
           0,
           i / xsize - 0.5,
           0,
-          sin((j / ysize) * 5),
+          1,
           0,
           j / ysize - 0.5,
           0,
           0,
-          sin((k / zsize) * 5),
+          1,
           k / zsize - 0.5,
           0,
           0,
@@ -61,7 +61,7 @@ const inputHandler = function () {
   console.log("input handler triggered");
   try {
     if (scalar) {
-      const code = math.compile(eqs[0]);
+      const code = math.compile(eq);
       for (let i = 0; i < xsize; i++) {
         for (let j = 0; j < ysize; j++) {
           for (let k = 0; k < zsize; k++) {
@@ -93,17 +93,17 @@ const inputHandler = function () {
                 )
                 .multiply(
                   new THREE.Matrix4().set(
-                    code.evaluate(scope),
+                    code.evaluate(scope) * scale,
                     0,
                     0,
                     0,
                     0,
-                    code.evaluate(scope),
+                    code.evaluate(scope) * scale,
                     0,
                     0,
                     0,
                     0,
-                    code.evaluate(scope),
+                    code.evaluate(scope) * scale,
                     0,
                     0,
                     0,
@@ -116,9 +116,9 @@ const inputHandler = function () {
         }
       }
     } else {
-      const mcode = math.compile(eqs[1]);
-      const ncode = math.compile(eqs[2]);
-      const pcode = math.compile(eqs[3]);
+      const mcode = math.compile(meq);
+      const ncode = math.compile(neq);
+      const pcode = math.compile(peq);
       for (let i = 0; i < xsize; i++) {
         for (let j = 0; j < ysize; j++) {
           for (let k = 0; k < zsize; k++) {
@@ -150,17 +150,17 @@ const inputHandler = function () {
                 )
                 .multiply(
                   new THREE.Matrix4().set(
-                    mcode.evaluate(scope),
+                    mcode.evaluate(scope) * scale,
                     0,
                     0,
                     0,
                     0,
-                    ncode.evaluate(scope),
+                    ncode.evaluate(scope) * scale,
                     0,
                     0,
                     0,
                     0,
-                    pcode.evaluate(scope),
+                    pcode.evaluate(scope) * scale,
                     0,
                     0,
                     0,
@@ -174,31 +174,57 @@ const inputHandler = function () {
       }
     }
     meesh.instanceMatrix.needsUpdate = true;
-  } catch {
+  } catch (error) {
     console.log("bad input");
+    console.error(error);
   }
 };
-let eqs: string[] = ["sin(x) + cos(y)", "sin(x)", "cos(y)", "z"];
-let eqns: string[] = ["equation", "mequation", "nequation", "pequation"];
-let eqis: HTMLInputElement[] = [];
-let scalar: boolean = true;
-let scalari = document.getElementById("scalar")! as HTMLInputElement;
-for (let i: number = 0; i < eqs.length; i++) {
-  eqis.push(document.getElementById(eqns[i])! as HTMLInputElement);
-  eqis[i].value = eqs[i];
-  eqis[i].addEventListener("focusout", () => {
-    for (let j: number = 0; j < eqs.length; j++) {
-      if (!(eqis[j].value === eqs[j])) {
-        eqs[j] = eqis[j].value;
-        inputHandler();
-      }
-    }
-  });
-}
-scalari.addEventListener("focusout", () => {
-  scalar = scalari.checked;
-  inputHandler;
+
+const eqi = document.getElementById("equation")! as HTMLInputElement;
+const meqi = document.getElementById("mequation")! as HTMLInputElement;
+const neqi = document.getElementById("nequation")! as HTMLInputElement;
+const peqi = document.getElementById("pequation")! as HTMLInputElement;
+const scalari = document.getElementById("scalar")! as HTMLInputElement;
+const scalei = document.getElementById("scale")! as HTMLInputElement;
+scalei.value = "50";
+eqi.value = "x*y*z";
+meqi.value = "cos(x)";
+neqi.value = "sin(y)";
+peqi.value = "z";
+
+let eq: string = eqi.value;
+let meq: string = meqi.value;
+let neq: string = neqi.value;
+let peq: string = peqi.value;
+let scalar: boolean = false;
+let scale: number = parseInt(scalei.value) / 4;
+
+eqi.addEventListener("focusout", () => {
+  eq = eqi.value;
+  inputHandler();
 });
+meqi.addEventListener("focusout", () => {
+  meq = meqi.value;
+  inputHandler();
+});
+neqi.addEventListener("focusout", () => {
+  neq = neqi.value;
+  inputHandler();
+});
+peqi.addEventListener("focusout", () => {
+  neq = neqi.value;
+  inputHandler();
+});
+scalari.addEventListener("change", () => {
+  scalar = scalari.checked;
+  inputHandler();
+});
+scalei.addEventListener("change", () => {
+  scale = parseInt(scalei.value) / 4;
+  inputHandler();
+});
+
+inputHandler();
 
 function animate() {
   document.getElementById("fps")!.innerHTML =
