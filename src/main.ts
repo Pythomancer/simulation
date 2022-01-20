@@ -2,7 +2,6 @@ import "./style.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as math from "mathjs";
-import { cos, sin } from "mathjs";
 
 const xsize = 20;
 const ysize = 20;
