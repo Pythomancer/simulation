@@ -114,11 +114,15 @@ const neqi = document.getElementById("nequation")! as HTMLInputElement;
 const peqi = document.getElementById("pequation")! as HTMLInputElement;
 const scalari = document.getElementById("scalar")! as HTMLInputElement;
 const scalei = document.getElementById("scale")! as HTMLInputElement;
+const particlei = document.getElementById("particles")! as HTMLInputElement;
+const spini = document.getElementById("spin")! as HTMLInputElement;
 scalei.value = "50";
 eqi.value = "x*y*z";
 meqi.value = "cos(x)";
 neqi.value = "sin(y)";
 peqi.value = "z";
+particlei.checked = false;
+spini.checked = true;
 
 let eq: string = eqi.value;
 let meq: string = meqi.value;
@@ -126,6 +130,7 @@ let neq: string = neqi.value;
 let peq: string = peqi.value;
 let scalar: boolean = false;
 let scale: number = parseInt(scalei.value) / xsize;
+// let particles: boolean = false;
 
 eqi.addEventListener("focusout", () => {
   eq = eqi.value;
@@ -147,10 +152,14 @@ scalari.addEventListener("change", () => {
   scalar = scalari.checked;
   inputHandler();
 });
-scalei.addEventListener("change", () => {
+scalei.addEventListener("input", () => {
   scale = parseInt(scalei.value) / 4;
   inputHandler();
 });
+spini.addEventListener("change", () => {
+  controls.autoRotate = spini.checked;
+});
+// particlei.addEventListener("")
 
 inputHandler();
 camera.position.set(1, 1, 1);
