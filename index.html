@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
     <link rel="stylesheet" href="/src/style.css" />
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -8,41 +9,68 @@
     <title>simulation</title>
   </head>
   <body>
-    <div>
-      <label for="equation"> Scalar Equation: </label>
-      <input type="text" id="equation" name="equation">
+      <div>
+        <label for="equation"> Scalar Equation: </label>
+        <input type="text" id="equation" name="equation">
+        <span class="tooltiptext"> the equation that gives the size of the cube when in scalar mode </span>
+      </div>
       <br>
-      <label for="scalar"> Scalar Mode? </label>
-      <input type="checkbox" id="scalar" name="scalar">
+      <div>
+        <label for="scalar"> Scalar Mode? </label>
+        <input type="checkbox" id="scalar" name="scalar">
+        <span class="tooltiptext"> check this to set scalar mode, as opposed to vector mode </span>
+      </div>
       <br>
-      <label for="particles"> Particle Flow?: </label>
-      <input type="checkbox" id="particles" name="particles">
+      <div>
+        <label for="particles"> Particle Flow?: </label>
+        <input type="checkbox" id="particles" name="particles">
+        <span class="tooltiptext"> check this to enable particles </span>
+      </div>
       <br>
-      <label for="spin"> Spin?: </label>
-      <input type="checkbox" id="spin" name="spin">
+      <div>
+        <label for="spin"> Spin?: </label>
+        <input type="checkbox" id="spin" name="spin">
+        <span class="tooltiptext"> check this to enable automatic spinning of the viewport around the cube </span>
+      </div>
       <br>
-      <label for="mequation"> X-Component Equation: </label>
-      <input type="text" id="mequation" name="mequation">
+      <div>
+        <label for="mequation"> X-Component Equation: </label>
+        <input type="text" id="mequation" name="mequation">
+        <span class="tooltiptext"> sets the i-component of the vector-valued function </span>
+      </div>
       <br>
-      <label for="nequation"> Y-Component Equation: </label>
-      <input type="text" id="nequation" name="nequation">
+      <div>
+        <label for="nequation"> Y-Component Equation: </label>
+        <input type="text" id="nequation" name="nequation">
+        <span class="tooltiptext"> sets the j-component of the vector-valued function </span>
+      </div>
       <br>
-      <label for="pequation"> Z-Component Equation: </label>
-      <input type="text" id="pequation" name="pequation">
+      <div>
+        <label for="pequation"> Z-Component Equation: </label>
+        <input type="text" id="pequation" name="pequation">
+        <span class="tooltiptext"> sets the k-component of the vector-valued function </span>
+      </div>
       <br>
-      <label for="scale"> Scale Factor: </label>
-      <input type="range" min="1" max="100" class="slider" id="scale">
+      <div>
+        <label for="scale"> Scale Factor: </label>
+        <input type="range" min="1" max="100" class="slider" id="scale">
+        <span class="tooltiptext"> sets the scale of the vector arrows or cubes </span>
+      </div>
       <br>
-      <label for="size"> Domain Size: </label>
-      <input type="range" min="1" max="60" class="slider" id="size">
+      <div>
+        <label for="size"> Domain Size: </label>
+        <input type="range" min="1" max="60" class="slider" id="size">
+        <span class="tooltiptext"> sets the side length of the domain cube </span>
+      </div>
       <br>
-      <label for="color"> Background Color: </label>
-      <input type="color" id="color">
-
+      <div>
+        <label for="color"> Background Color: </label>
+        <input type="color" id="color">
+        <span class="tooltiptext"> sets the viewport background color </span>
+      </div>
       <p id="fps">
         0
       </p>
-    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -13,16 +13,17 @@ body {
 }
 
 p {
-  color: aquamarine;
+  color: white;
+  font-family: Inter
 }
 label {
-  color: aquamarine;
+  color: white;
   left: 0;
-  font-family: Arial;
+  font-family: Inter;
 }
 input {
   color: #1f1e33
-  font-family: Arial;
+  font-family: Inter;
   padding: 5px 10px;
   margin: 8px 0;
   box-sizing: border-box;
@@ -32,4 +33,25 @@ canvas {
   left: 0;
   top: 0;
   z-index: -1;
+}
+div {
+  position: relative;
+  display: inline-block;
+}
+
+div .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  color: #ffffff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  font-family: Inter 
+  position: absolute;
+  z-index: 1;
+}
+
+div:hover .tooltiptext {
+  visibility: visible;
+  font-family: Inter
 }
