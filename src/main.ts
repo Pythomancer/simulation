@@ -92,7 +92,7 @@ const inputHandler = function () {
             );
             dummy.position.set(i / size - 0.5, j / size - 0.5, k / size - 0.5);
 
-            dummy.scale.set(scale / 3, scale * 3, scale / 3);
+            dummy.scale.set(scale / 3, scale / 3, scale * 3);
             dummy.updateMatrix();
             meesh.setMatrixAt(i * size * size + j * size + k, dummy.matrix);
           }
