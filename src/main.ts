@@ -175,6 +175,7 @@ const scalei = document.getElementById("scale")! as HTMLInputElement;
 const particlei = document.getElementById("particles")! as HTMLInputElement;
 const spini = document.getElementById("spin")! as HTMLInputElement;
 const sizei = document.getElementById("size")! as HTMLInputElement;
+const colori = document.getElementById("color")! as HTMLInputElement;
 scalei.value = "50";
 eqi.value = "x*y*z";
 meqi.value = "cos(x)";
@@ -183,6 +184,7 @@ peqi.value = "z";
 particlei.checked = false;
 spini.checked = true;
 sizei.value = "20";
+colori.value = "#1f1e33";
 
 let eq: string = eqi.value;
 let meq: string = meqi.value;
@@ -191,6 +193,7 @@ let peq: string = peqi.value;
 let scalar: boolean = false;
 let scale: number = parseInt(scalei.value) / size;
 let particles: boolean = false;
+let color: string = colori.value;
 
 let mcode = math.compile(meq);
 let ncode = math.compile(neq);
@@ -252,6 +255,11 @@ sizei.addEventListener("input", () => {
   newDomain();
   inputHandler();
 });
+colori.addEventListener("input", () => {
+  color = colori.value;
+  scene.background = new THREE.Color(color);
+});
+scene.background = new THREE.Color(color);
 
 inputHandler();
 camera.position.set(1, 1, 1);
