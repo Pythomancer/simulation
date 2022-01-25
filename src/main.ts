@@ -3,9 +3,10 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as math from "mathjs";
 
-const xsize = 20;
-const ysize = 20;
-const zsize = 20;
+const xsize: number = 20;
+const ysize: number = 20;
+const zsize: number = 20;
+let timeconst: number = 0.001;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -15,13 +16,23 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 
+let particleps: THREE.Vector3[] = [];
 const material = new THREE.MeshBasicMaterial({
   color: 0xffffff,
 });
 let ptCube = new THREE.BoxGeometry(0.005, 0.005, 0.005);
+let bcube = new THREE.BoxGeometry(0.01, 0.01, 0.01);
 let meesh = new THREE.InstancedMesh(ptCube, material, xsize * ysize * zsize);
 let ms = window.performance.now();
 let dummy = new THREE.Object3D();
+let dm = new THREE.Object3D();
+
+let particleesh: THREE.InstancedMesh = new THREE.InstancedMesh(
+  bcube,
+  new THREE.MeshBasicMaterial({ color: 0xffffff }),
+  xsize * ysize * zsize
+);
+
 for (let i = 0; i < xsize; i++) {
   for (let j = 0; j < ysize; j++) {
     for (let k = 0; k < zsize; k++) {
@@ -69,9 +80,6 @@ const inputHandler = function () {
         }
       }
     } else {
-      const mcode = math.compile(meq);
-      const ncode = math.compile(neq);
-      const pcode = math.compile(peq);
       for (let i = 0; i < xsize; i++) {
         for (let j = 0; j < ysize; j++) {
           for (let k = 0; k < zsize; k++) {
@@ -108,6 +116,64 @@ const inputHandler = function () {
   }
 };
 
+const particleHandler = function () {
+  if (particles) {
+    for (let i: number = 0; i < particleesh.count; i++) {
+      particleps.push(
+        new THREE.Vector3(
+          Math.random() - 0.5,
+          Math.random() - 0.5,
+          Math.random() - 0.5
+        )
+      );
+      dm.position.set(particleps[i].x, particleps[i].y, particleps[i].z);
+      dm.lookAt(new THREE.Vector3(0, 0, 0));
+      dm.scale.set(1, 1, 1);
+      dm.updateMatrix();
+      particleesh.setMatrixAt(i, dm.matrix);
+    }
+    scene.add(particleesh);
+    particleesh.instanceMatrix.needsUpdate = true;
+  } else {
+    scene.remove(particleesh);
+    renderer.renderLists.dispose();
+  }
+};
+
+const tickParticle = function () {
+  for (let i: number = 0; i < particleesh.count; i++) {
+    let scope = {
+      x: particleps[i].x,
+      y: particleps[i].y,
+      z: particleps[i].z,
+    };
+    particleps[i].x += timeconst * mcode.evaluate(scope);
+    particleps[i].y += timeconst * ncode.evaluate(scope);
+    particleps[i].z += timeconst * pcode.evaluate(scope);
+    if (
+      !(
+        particleps[i].x < 0.5 &&
+        particleps[i].x > -0.5 &&
+        particleps[i].y < 0.5 &&
+        particleps[i].y > -0.5 &&
+        particleps[i].z < 0.5 &&
+        particleps[i].z > -0.5
+      )
+    ) {
+      particleps[i].x = Math.random() - 0.5;
+      particleps[i].y = Math.random() - 0.5;
+      particleps[i].z = Math.random() - 0.5;
+    }
+    dm.rotation.x = 0;
+    dm.rotation.y = 0;
+    dm.rotation.z = 0;
+    dm.position.set(particleps[i].x, particleps[i].y, particleps[i].z);
+    dm.updateMatrix();
+    particleesh.setMatrixAt(i, dm.matrix);
+  }
+  particleesh.instanceMatrix.needsUpdate = true;
+};
+
 const eqi = document.getElementById("equation")! as HTMLInputElement;
 const meqi = document.getElementById("mequation")! as HTMLInputElement;
 const neqi = document.getElementById("nequation")! as HTMLInputElement;
@@ -130,26 +196,42 @@ let neq: string = neqi.value;
 let peq: string = peqi.value;
 let scalar: boolean = false;
 let scale: number = parseInt(scalei.value) / xsize;
-// let particles: boolean = false;
+let particles: boolean = false;
 
-eqi.addEventListener("focusout", () => {
+let mcode = math.compile(meq);
+let ncode = math.compile(neq);
+let pcode = math.compile(peq);
+let code = math.compile(eq);
+
+eqi.addEventListener("input", () => {
   eq = eqi.value;
+  code = math.compile(eq);
   inputHandler();
 });
-meqi.addEventListener("focusout", () => {
+meqi.addEventListener("input", () => {
   meq = meqi.value;
+  mcode = math.compile(meq);
   inputHandler();
 });
-neqi.addEventListener("focusout", () => {
+neqi.addEventListener("input", () => {
   neq = neqi.value;
+  ncode = math.compile(neq);
   inputHandler();
 });
-peqi.addEventListener("focusout", () => {
+peqi.addEventListener("input", () => {
   peq = peqi.value;
+  pcode = math.compile(peq);
   inputHandler();
 });
 scalari.addEventListener("change", () => {
   scalar = scalari.checked;
+  if (scalar) {
+    particlei.disabled = true;
+  } else {
+    particlei.disabled = false;
+  }
+  particles = false;
+  particlei.checked = false;
   inputHandler();
 });
 scalei.addEventListener("input", () => {
@@ -159,7 +241,10 @@ scalei.addEventListener("input", () => {
 spini.addEventListener("change", () => {
   controls.autoRotate = spini.checked;
 });
-// particlei.addEventListener("")
+particlei.addEventListener("change", () => {
+  particles = particlei.checked;
+  particleHandler();
+});
 
 inputHandler();
 camera.position.set(1, 1, 1);
@@ -171,9 +256,13 @@ function animate() {
   controls.update();
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
+  if (particles) {
+    tickParticle();
+  }
 }
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 window.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
