@@ -3,9 +3,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as math from "mathjs";
 
-const xsize: number = 20;
-const ysize: number = 20;
-const zsize: number = 20;
+let size = 20;
 let timeconst: number = 0.001;
 
 const scene = new THREE.Scene();
@@ -22,7 +20,7 @@ const material = new THREE.MeshBasicMaterial({
 });
 let ptCube = new THREE.BoxGeometry(0.005, 0.005, 0.005);
 let bcube = new THREE.BoxGeometry(0.01, 0.01, 0.01);
-let meesh = new THREE.InstancedMesh(ptCube, material, xsize * ysize * zsize);
+let meesh = new THREE.InstancedMesh(ptCube, material, size * size * size);
 let ms = window.performance.now();
 let dummy = new THREE.Object3D();
 let dm = new THREE.Object3D();
@@ -30,18 +28,18 @@ let dm = new THREE.Object3D();
 let particleesh: THREE.InstancedMesh = new THREE.InstancedMesh(
   bcube,
   new THREE.MeshBasicMaterial({ color: 0xffffff }),
-  xsize * ysize * zsize
+  size * size * size
 );
 
-for (let i = 0; i < xsize; i++) {
-  for (let j = 0; j < ysize; j++) {
-    for (let k = 0; k < zsize; k++) {
-      dummy.position.set(i / xsize - 0.5, j / ysize - 0.5, k / zsize - 0.5);
+for (let i = 0; i < size; i++) {
+  for (let j = 0; j < size; j++) {
+    for (let k = 0; k < size; k++) {
+      dummy.position.set(i / size - 0.5, j / size - 0.5, k / size - 0.5);
       dummy.updateMatrix();
-      meesh.setMatrixAt(i * ysize * zsize + j * zsize + k, dummy.matrix);
+      meesh.setMatrixAt(i * size * size + j * size + k, dummy.matrix);
       meesh.setColorAt(
-        i * ysize * zsize + j * zsize + k,
-        new THREE.Color(i / xsize, j / ysize, k / zsize)
+        i * size * size + j * size + k,
+        new THREE.Color(i / size, j / size, k / size)
       );
     }
   }
@@ -53,19 +51,15 @@ const inputHandler = function () {
   try {
     if (scalar) {
       const code = math.compile(eq);
-      for (let i = 0; i < xsize; i++) {
-        for (let j = 0; j < ysize; j++) {
-          for (let k = 0; k < zsize; k++) {
+      for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+          for (let k = 0; k < size; k++) {
             let scope = {
-              x: i / xsize,
-              y: j / ysize,
-              z: k / zsize,
+              x: i / size,
+              y: j / size,
+              z: k / size,
             };
-            dummy.position.set(
-              i / xsize - 0.5,
-              j / ysize - 0.5,
-              k / zsize - 0.5
-            );
+            dummy.position.set(i / size - 0.5, j / size - 0.5, k / size - 0.5);
             dummy.scale.set(
               code.evaluate(scope) * scale,
               code.evaluate(scope) * scale,
@@ -75,18 +69,18 @@ const inputHandler = function () {
             dummy.rotation.y = 0;
             dummy.rotation.z = 0;
             dummy.updateMatrix();
-            meesh.setMatrixAt(i * ysize * zsize + j * zsize + k, dummy.matrix);
+            meesh.setMatrixAt(i * size * size + j * size + k, dummy.matrix);
           }
         }
       }
     } else {
-      for (let i = 0; i < xsize; i++) {
-        for (let j = 0; j < ysize; j++) {
-          for (let k = 0; k < zsize; k++) {
+      for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+          for (let k = 0; k < size; k++) {
             let scope = {
-              x: i / xsize - 0.5,
-              y: j / ysize - 0.5,
-              z: k / zsize - 0.5,
+              x: i / size - 0.5,
+              y: j / size - 0.5,
+              z: k / size - 0.5,
             };
             dummy.position.set(0, 0, 0);
             dummy.lookAt(
@@ -96,15 +90,11 @@ const inputHandler = function () {
                 pcode.evaluate(scope)
               )
             );
-            dummy.position.set(
-              i / xsize - 0.5,
-              j / ysize - 0.5,
-              k / zsize - 0.5
-            );
+            dummy.position.set(i / size - 0.5, j / size - 0.5, k / size - 0.5);
 
             dummy.scale.set(scale / 3, scale * 3, scale / 3);
             dummy.updateMatrix();
-            meesh.setMatrixAt(i * ysize * zsize + j * zsize + k, dummy.matrix);
+            meesh.setMatrixAt(i * size * size + j * size + k, dummy.matrix);
           }
         }
       }
@@ -195,17 +185,15 @@ let meq: string = meqi.value;
 let neq: string = neqi.value;
 let peq: string = peqi.value;
 let scalar: boolean = false;
-let scale: number = parseInt(scalei.value) / xsize;
+let scale: number = parseInt(scalei.value) / size;
 let particles: boolean = false;
 
 let mcode = math.compile(meq);
 let ncode = math.compile(neq);
 let pcode = math.compile(peq);
-let code = math.compile(eq);
 
 eqi.addEventListener("input", () => {
   eq = eqi.value;
-  code = math.compile(eq);
   inputHandler();
 });
 meqi.addEventListener("input", () => {
