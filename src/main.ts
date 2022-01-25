@@ -30,20 +30,22 @@ let particleesh: THREE.InstancedMesh = new THREE.InstancedMesh(
   new THREE.MeshBasicMaterial({ color: 0xffffff }),
   size * size * size
 );
-
-for (let i = 0; i < size; i++) {
-  for (let j = 0; j < size; j++) {
-    for (let k = 0; k < size; k++) {
-      dummy.position.set(i / size - 0.5, j / size - 0.5, k / size - 0.5);
-      dummy.updateMatrix();
-      meesh.setMatrixAt(i * size * size + j * size + k, dummy.matrix);
-      meesh.setColorAt(
-        i * size * size + j * size + k,
-        new THREE.Color(i / size, j / size, k / size)
-      );
+const newDomain = function () {
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < size; j++) {
+      for (let k = 0; k < size; k++) {
+        dummy.position.set(i / size - 0.5, j / size - 0.5, k / size - 0.5);
+        dummy.updateMatrix();
+        meesh.setMatrixAt(i * size * size + j * size + k, dummy.matrix);
+        meesh.setColorAt(
+          i * size * size + j * size + k,
+          new THREE.Color(i / size, j / size, k / size)
+        );
+      }
     }
   }
-}
+};
+newDomain();
 meesh.instanceMatrix.needsUpdate = true;
 scene.add(meesh);
 
@@ -172,6 +174,7 @@ const scalari = document.getElementById("scalar")! as HTMLInputElement;
 const scalei = document.getElementById("scale")! as HTMLInputElement;
 const particlei = document.getElementById("particles")! as HTMLInputElement;
 const spini = document.getElementById("spin")! as HTMLInputElement;
+const sizei = document.getElementById("size")! as HTMLInputElement;
 scalei.value = "50";
 eqi.value = "x*y*z";
 meqi.value = "cos(x)";
@@ -179,6 +182,7 @@ neqi.value = "sin(y)";
 peqi.value = "z";
 particlei.checked = false;
 spini.checked = true;
+sizei.value = "20";
 
 let eq: string = eqi.value;
 let meq: string = meqi.value;
@@ -219,6 +223,7 @@ scalari.addEventListener("change", () => {
     particlei.disabled = false;
   }
   particles = false;
+  particleHandler();
   particlei.checked = false;
   inputHandler();
 });
@@ -232,6 +237,20 @@ spini.addEventListener("change", () => {
 particlei.addEventListener("change", () => {
   particles = particlei.checked;
   particleHandler();
+});
+sizei.addEventListener("input", () => {
+  size = parseInt(sizei.value);
+  particleesh.count = size * size * size;
+  meesh.count = size * size * size;
+  meesh = new THREE.InstancedMesh(ptCube, material, size * size * size);
+  particleesh = new THREE.InstancedMesh(
+    bcube,
+    new THREE.MeshBasicMaterial({ color: 0xffffff }),
+    size * size * size
+  );
+  meesh.instanceMatrix.needsUpdate = true;
+  newDomain();
+  inputHandler();
 });
 
 inputHandler();
