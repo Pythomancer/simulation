@@ -133,6 +133,8 @@ const particleHandler = function () {
 
 const tickParticle = function () {
   for (let i: number = 0; i < particleesh.count; i++) {
+    let m = new THREE.Matrix4();
+    particleesh.getMatrixAt(i, m);
     let scope = {
       x: particleps[i].x,
       y: particleps[i].y,
@@ -155,13 +157,55 @@ const tickParticle = function () {
       particleps[i].y = Math.random() - 0.5;
       particleps[i].z = Math.random() - 0.5;
     }
-    dm.scale.set(psize / 3, psize / 3, psize / 3);
-    dm.rotation.x = 0;
-    dm.rotation.y = 0;
-    dm.rotation.z = 0;
-    dm.position.set(particleps[i].x, particleps[i].y, particleps[i].z);
-    dm.updateMatrix();
-    particleesh.setMatrixAt(i, dm.matrix);
+    particleesh.setMatrixAt(
+      i,
+      m
+        .set(
+          1,
+          0,
+          0,
+          particleps[i].x,
+          0,
+          1,
+          0,
+          particleps[i].y,
+          0,
+          0,
+          1,
+          particleps[i].z,
+          0,
+          0,
+          0,
+          1
+        )
+        .multiply(
+          new THREE.Matrix4().set(
+            psize / 3,
+            0,
+            0,
+            0,
+            0,
+            psize / 3,
+            0,
+            0,
+            0,
+            0,
+            psize / 3,
+            0,
+            0,
+            0,
+            0,
+            1
+          )
+        )
+    );
+    // dm.scale.set(psize / 3, psize / 3, psize / 3);
+    // dm.rotation.x = 0;
+    // dm.rotation.y = 0;
+    // dm.rotation.z = 0;
+    // dm.position.set(particleps[i].x, particleps[i].y, particleps[i].z);
+    // dm.updateMatrix();
+    // particleesh.setMatrixAt(i, dm.matrix);
   }
   particleesh.instanceMatrix.needsUpdate = true;
 };
