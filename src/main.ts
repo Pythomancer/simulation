@@ -155,6 +155,7 @@ const tickParticle = function () {
       particleps[i].y = Math.random() - 0.5;
       particleps[i].z = Math.random() - 0.5;
     }
+    dm.scale.set(psize / 3, psize / 3, psize / 3);
     dm.rotation.x = 0;
     dm.rotation.y = 0;
     dm.rotation.z = 0;
@@ -176,6 +177,7 @@ const spini = document.getElementById("spin")! as HTMLInputElement;
 const sizei = document.getElementById("size")! as HTMLInputElement;
 const colori = document.getElementById("color")! as HTMLInputElement;
 const speedi = document.getElementById("speed")! as HTMLInputElement;
+const psizei = document.getElementById("psize")! as HTMLInputElement;
 
 scalei.value = "50";
 eqi.value = "x*y*z";
@@ -187,6 +189,7 @@ spini.checked = true;
 sizei.value = "20";
 colori.value = "#1f1e33";
 speedi.value = "1";
+psizei.value = "3";
 
 let eq: string = eqi.value;
 let meq: string = meqi.value;
@@ -197,6 +200,7 @@ let scale: number = parseInt(scalei.value) / size;
 let particles: boolean = false;
 let color: string = colori.value;
 let speed: number = parseInt(speedi.value);
+let psize: number = parseInt(psizei.value);
 
 let mcode = math.compile(meq);
 let ncode = math.compile(neq);
@@ -246,15 +250,20 @@ particlei.addEventListener("change", () => {
 });
 sizei.addEventListener("input", () => {
   size = parseInt(sizei.value);
-  particleesh.count = size * size * size;
   meesh.count = size * size * size;
   scene.remove(meesh);
+  if (particles) {
+    scene.remove(particleesh);
+    particleesh = new THREE.InstancedMesh(
+      bcube,
+      new THREE.MeshBasicMaterial({ color: 0xffffff }),
+      size * size * size
+    );
+    particleHandler();
+    scene.add(particleesh);
+  }
   meesh = new THREE.InstancedMesh(ptCube, material, size * size * size);
-  particleesh = new THREE.InstancedMesh(
-    bcube,
-    new THREE.MeshBasicMaterial({ color: 0xffffff }),
-    size * size * size
-  );
+
   meesh.instanceMatrix.needsUpdate = true;
   scene.add(meesh);
   newDomain();
@@ -266,6 +275,9 @@ colori.addEventListener("input", () => {
 });
 speedi.addEventListener("input", () => {
   speed = parseInt(speedi.value);
+});
+psizei.addEventListener("input", () => {
+  psize = parseInt(psizei.value);
 });
 
 scene.background = new THREE.Color(color);
