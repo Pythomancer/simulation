@@ -20,6 +20,7 @@ label {
   color: white;
   left: 0;
   font-family: Inter;
+  font-weight: bold
 }
 input {
   color: #1f1e33
@@ -49,6 +50,7 @@ div .tooltiptext {
   font-family: Inter 
   position: absolute;
   z-index: 1;
+  font-style: oblique
 }
 
 div:hover .tooltiptext {

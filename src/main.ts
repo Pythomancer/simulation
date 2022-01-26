@@ -245,6 +245,7 @@ sizei.addEventListener("input", () => {
   size = parseInt(sizei.value);
   particleesh.count = size * size * size;
   meesh.count = size * size * size;
+  scene.remove(meesh);
   meesh = new THREE.InstancedMesh(ptCube, material, size * size * size);
   particleesh = new THREE.InstancedMesh(
     bcube,
@@ -252,6 +253,7 @@ sizei.addEventListener("input", () => {
     size * size * size
   );
   meesh.instanceMatrix.needsUpdate = true;
+  scene.add(meesh);
   newDomain();
   inputHandler();
 });
