@@ -4,7 +4,6 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as math from "mathjs";
 
 let size = 20;
-let timeconst: number = 0.001;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -21,7 +20,7 @@ const material = new THREE.MeshBasicMaterial({
 let ptCube = new THREE.BoxGeometry(0.005, 0.005, 0.005);
 let bcube = new THREE.BoxGeometry(0.01, 0.01, 0.01);
 let meesh = new THREE.InstancedMesh(ptCube, material, size * size * size);
-let ms = window.performance.now();
+// let ms = window.performance.now();
 let dummy = new THREE.Object3D();
 let dm = new THREE.Object3D();
 
@@ -139,9 +138,9 @@ const tickParticle = function () {
       y: particleps[i].y,
       z: particleps[i].z,
     };
-    particleps[i].x += timeconst * mcode.evaluate(scope);
-    particleps[i].y += timeconst * ncode.evaluate(scope);
-    particleps[i].z += timeconst * pcode.evaluate(scope);
+    particleps[i].x += (speed / 1000) * mcode.evaluate(scope);
+    particleps[i].y += (speed / 1000) * ncode.evaluate(scope);
+    particleps[i].z += (speed / 1000) * pcode.evaluate(scope);
     if (
       !(
         particleps[i].x < 0.5 &&
@@ -176,6 +175,8 @@ const particlei = document.getElementById("particles")! as HTMLInputElement;
 const spini = document.getElementById("spin")! as HTMLInputElement;
 const sizei = document.getElementById("size")! as HTMLInputElement;
 const colori = document.getElementById("color")! as HTMLInputElement;
+const speedi = document.getElementById("speed")! as HTMLInputElement;
+
 scalei.value = "50";
 eqi.value = "x*y*z";
 meqi.value = "cos(x)";
@@ -185,6 +186,7 @@ particlei.checked = false;
 spini.checked = true;
 sizei.value = "20";
 colori.value = "#1f1e33";
+speedi.value = "1";
 
 let eq: string = eqi.value;
 let meq: string = meqi.value;
@@ -194,6 +196,7 @@ let scalar: boolean = false;
 let scale: number = parseInt(scalei.value) / size;
 let particles: boolean = false;
 let color: string = colori.value;
+let speed: number = parseInt(speedi.value);
 
 let mcode = math.compile(meq);
 let ncode = math.compile(neq);
@@ -261,14 +264,18 @@ colori.addEventListener("input", () => {
   color = colori.value;
   scene.background = new THREE.Color(color);
 });
+speedi.addEventListener("input", () => {
+  speed = parseInt(speedi.value);
+});
+
 scene.background = new THREE.Color(color);
 
 inputHandler();
 camera.position.set(1, 1, 1);
 function animate() {
-  document.getElementById("fps")!.innerHTML =
-    "" + math.round(1000 / (window.performance.now() - ms));
-  ms = window.performance.now();
+  // document.getElementById("fps")!.innerHTML =
+  //   "" + math.round(1000 / (window.performance.now() - ms));
+  // ms = window.performance.now();
 
   controls.update();
   renderer.render(scene, camera);

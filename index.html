@@ -64,13 +64,29 @@
       </div>
       <br>
       <div>
+        <label for="speed"> Particle Speed: </label>
+        <input type="range" min="0" max="10" class="slider" id="speed">
+        <span class="tooltiptext"> sets the speed of the particles </span>
+      </div>
+      <br>
+      <div>
         <label for="color"> Background Color: </label>
         <input type="color" id="color">
         <span class="tooltiptext"> sets the viewport background color </span>
       </div>
-      <p id="fps">
+      <!-- <p id="fps">
         0
-      </p>
+      </p> -->
+      <br>
+      <br>
+      <br>
+      <br>
+      <div class="sauce">
+        <a href="https://github.com/Pythomancer/simulation">source</a>
+        <br>
+        <br>
+        <a href="https://threejs.org/"> three.js, the glorious rendering engine</a>
+      </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
