@@ -59,6 +59,7 @@ const inputHandler = function () {
               x: i / size,
               y: j / size,
               z: k / size,
+              t: time,
             };
             dummy.position.set(i / size - 0.5, j / size - 0.5, k / size - 0.5);
             dummy.scale.set(
@@ -82,6 +83,7 @@ const inputHandler = function () {
               x: i / size - 0.5,
               y: j / size - 0.5,
               z: k / size - 0.5,
+              t: time,
             };
             dummy.position.set(0, 0, 0);
             dummy.lookAt(
@@ -139,6 +141,7 @@ const tickParticle = function () {
       x: particleps[i].x,
       y: particleps[i].y,
       z: particleps[i].z,
+      t: time,
     };
     particleps[i].x += (speed / 1000) * mcode.evaluate(scope);
     particleps[i].y += (speed / 1000) * ncode.evaluate(scope);
@@ -222,6 +225,7 @@ const sizei = document.getElementById("size")! as HTMLInputElement;
 const colori = document.getElementById("color")! as HTMLInputElement;
 const speedi = document.getElementById("speed")! as HTMLInputElement;
 const psizei = document.getElementById("psize")! as HTMLInputElement;
+const timei = document.getElementById("time")! as HTMLInputElement;
 
 scalei.value = "50";
 eqi.value = "x*y*z";
@@ -234,6 +238,7 @@ sizei.value = "20";
 colori.value = "#1f1e33";
 speedi.value = "1";
 psizei.value = "3";
+timei.value = "3";
 
 let eq: string = eqi.value;
 let meq: string = meqi.value;
@@ -249,6 +254,8 @@ let psize: number = parseInt(psizei.value);
 let mcode = math.compile(meq);
 let ncode = math.compile(neq);
 let pcode = math.compile(peq);
+
+let time: number = 0;
 
 eqi.addEventListener("input", () => {
   eq = eqi.value;
@@ -332,9 +339,18 @@ function animate() {
   // document.getElementById("fps")!.innerHTML =
   //   "" + math.round(1000 / (window.performance.now() - ms));
   // ms = window.performance.now();
-
+  time += parseInt(timei.value) / 100;
   controls.update();
   renderer.render(scene, camera);
+  if (
+    (eqi.value.includes("t") && scalar) ||
+    ((meqi.value.includes("t") ||
+      neqi.value.includes("t") ||
+      peqi.value.includes("t")) &&
+      !scalar)
+  ) {
+    inputHandler();
+  }
   requestAnimationFrame(animate);
   if (particles) {
     tickParticle();
