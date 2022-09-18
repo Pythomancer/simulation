@@ -228,7 +228,7 @@ const psizei = document.getElementById("psize")! as HTMLInputElement;
 const timei = document.getElementById("time")! as HTMLInputElement;
 
 scalei.value = "50";
-eqi.value = "x*y*z";
+eqi.value = "sin(t+sqrt(x*x+y*y+z*z))";
 meqi.value = "cos(x)";
 neqi.value = "sin(y)";
 peqi.value = "z";
